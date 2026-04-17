@@ -1,171 +1,159 @@
+#include <array>       // std::array fixed-size container.
+#include <functional>  // std::function callable wrapper.
+#include <iostream>    // std::cout terminal output.
+#include <map>         // std::map key/value dictionary.
+#include <stdexcept>   // std::runtime_error exception type.
+#include <string>      // std::string dynamic text.
+#include <vector>      // std::vector dynamic array.
 
-// this is a .cpp file, which is just a file for C++ source code
+#include "syntax.h"  // Classes, templates, and function declarations.
 
-// header: functions, classes, and objects included from either from connected
-// programs, or declared in a separate file for convenience
-#include <stdio.h>          // this is needed for output to terminal ("printf")
-#include "syntax.h"
+// This function converts a double to an integer by truncating decimals.
+int TruncateDouble(double x) { return static_cast<int>(x); }
 
-// this is a syntactical program for C++, which should stand as a standalone
-// cheatsheet for programming in C++ for experienced programmers
 int main() {
+  // This writes plain text output to the terminal.
+  std::cout << "Hello, C++ syntax program!\n\n";
 
-  // prints output to screen
-  printf("Hello, world!\n\n");
+  // FUNDAMENTAL TYPES
 
-  // FUNDAMENTAL VARIABLE TYPES
+  bool boolean_value = false;          // bool stores true/false.
+  char character_letter = 'a';         // char stores one byte character.
+  unsigned char u8 = 200;              // unsigned char stores 0..255.
+  int integer = 2;                     // int stores whole numbers.
+  long long integer64 = 1'000'000LL;   // long long often stores 64-bit ints.
+  float single_precision = 0.5f;       // float stores single-precision decimal.
+  double double_precision = 0.25;      // double stores double-precision decimal.
+  const double pi = 3.1415926535;      // const marks immutable data.
 
-  bool boolean= false;              // this type will store true or false values
+  // This prints fundamental values so they are used and visible.
+  std::cout << "bool=" << boolean_value << ", char=" << character_letter
+            << ", u8=" << static_cast<int>(u8) << ", int=" << integer
+            << ", int64=" << integer64 << ", float=" << single_precision
+            << ", double=" << double_precision << ", pi=" << pi << "\n\n";
 
-  char character_letter= 'a';       // this type will store either a "character"
-  char character_number= 48;        // or an integer of most efficient size
-  unsigned char character_unsigned= 21;     // it can be either signed
-  signed char character_signed= -21;        // or unsigned
+  // ARRAYS AND CONTAINERS
 
-  int integer= 2;                   // this type will store a 2+ byte integer
-  // this can also have both signed and unsigned variants
-  short int integer_short= 1000;    // short is guaranteed to have 2 bytes
-  long int integer_long= 100000;    // long is guaranteed to have 4 bytes
-  // long long also possible for 64 bit integers!
+  std::array<double, 5> fixed_array = {1.0, 0.5, 0.25, 0.125, 0.0625};
+  std::vector<int> dynamic_array = {1, 2, 3};  // vector can grow at runtime.
+  dynamic_array.push_back(4);                  // Append one element.
 
-  float floatingpoint_single= 0.5;  // this type is a single-precision "decimal"
-  double floatingpoint_double= 0.25;// this type is a double-precision "decimal"
-  // long double is also possible!
+  std::map<std::string, int> score = {{"alice", 10}, {"bob", 7}};
+  score["carol"] = 9;  // Insert/update by key.
 
-  // there is also a "void type", which is a type with an empty set of values.
-  // it is an "incomplete type" and cannot be completed- so void objects are not
-  // allowed. no void arrays, no void references. pointers to void and functions
-  // that return void are allowed, and quite useful!
+  std::cout << "fixed_array values: ";
+  for (double value : fixed_array) {  // Range-based for loop.
+    std::cout << value << " ";
+  }
+  std::cout << "\ndynamic_array size=" << dynamic_array.size()
+            << ", carol score=" << score["carol"] << "\n\n";
 
-  // ARRAYS
+  // CONTROL FLOW
 
-  // an array is an object that consists of N contiguously allocated objects of
-  // a given type T. below, we take T to be double, but double could easily be
-  // replaced below with any of the fundamental variables types (excl. void),
-  // pointers, pointers to memebers, classes, enumerations, etc.
-  int N= 5;
-
-  double array[N];
-
-  double array_onconstruction[N]= {1.0, 0.5, 0.25, 0.125, 0.0625};
-
-  // CONTROL STATEMENTS
-
-  // if statement
-  bool should_do= true;
-  bool otherwise_todo= true;
+  bool should_do = true;       // This drives if/else branching.
+  bool otherwise_todo = true;  // This drives else-if branch.
   if (!should_do) {
-    printf("I should not have done this.\n\n");
-  } else if(otherwise_todo) {
-    printf("If I should do this thing only if I didn't do the "
-        "first and you also told me to do this one as well.\n\n");
-  }
-  else {
-    printf("I only do this if I didn't do any of the other things.\n\n");
+    std::cout << "First branch.\n";
+  } else if (otherwise_todo) {
+    std::cout << "Else-if branch.\n";
+  } else {
+    std::cout << "Final else branch.\n";
   }
 
-  // for statement does something:
-  //    for(some variable, initialized; while some condition holds;
-  //    changing some variable at the end of each iteration)
-  for (int k= 0; k < N; k++) {
-    printf("%f\t", array_onconstruction[k]);
+  std::cout << "for loop: ";
+  for (std::size_t k = 0; k < dynamic_array.size(); ++k) {  // Indexed loop.
+    std::cout << dynamic_array[k] << " ";
   }
-  printf("\n\n");
+  std::cout << "\n";
 
-  // while statement does something while a statement is true
-  int counter= 2;
-  while (counter < 1000) {
-    counter= counter*counter;
-    printf("%d, ", counter);
+  int counter = 2;  // This state changes during while loop.
+  std::cout << "while loop: ";
+  while (counter < 100) {  // Run while condition is true.
+    counter *= 2;
+    std::cout << counter << " ";
   }
-  printf("\n\n");
+  std::cout << "\n";
 
-  // switch/case statements take some condition
-  int switch_variable= 2;
-  switch (switch_variable) {
-    case 1:     // jumps here if switch_variable == 1 and continues til break
-      printf("ah yes. ");
-      break;    // leaves switch/case statment
-    case 2:     // jumps here if switch_variable == 2 and continues
-      printf("oh, no! ");
-    case 3:     // jumps here if switch_variable == 3 and continues
-      printf("nope. nope. nope. ");
-    default:    // runs if it gets here
-      printf("this is very bad indeed.\n\n");
+  int switch_value = 2;  // This selects one switch case.
+  std::cout << "switch: ";
+  switch (switch_value) {
+    case 1:
+      std::cout << "one\n";
+      break;  // break prevents fallthrough.
+    case 2:
+      std::cout << "two\n";
+      break;
+    default:
+      std::cout << "other\n";
+      break;
   }
-  // note that, in the absence of break statements, switch/case will continue to
-  // run through all of the options
+  std::cout << "\n";
 
-  // CLASSES
+  // STRINGS
 
-  // we can declare a class here, which is defined in the header file
-  aClass cls= aClass();
-  // you can interact with the public members of a class, but not private ones
-  int x_cls= 4;
-  double c_cls= 5.2;
+  std::string greeting = "Hello";         // std::string stores text.
+  greeting += ", world";                  // Concatenation/appending.
+  std::size_t where = greeting.find("w");  // Search returns position.
+  std::cout << "string=\"" << greeting << "\", find('w')=" << where << "\n\n";
 
-  cls.setX(x_cls);
-  cls.zEqualsProduct(c_cls);
-  printf("z= %f.\n", cls.getZ());
+  // FUNCTIONS, LAMBDAS, AND FUNCTION POINTERS
 
-  // each instance of a class has a separate set of variables so we can
-  // instantiate a second and see a completely secondary result!
-  aClass cls2= aClass();
-  int x_cls2= 8;
-  double c_cls2= 1.703333;
-  cls2.setX(x_cls2);
-  cls2.zEqualsProduct(c_cls2);
-  printf("z= %f.\tz2= %f!\n\n", cls.getZ(), cls2.getZ());
+  int (*function_pointer)(double) = TruncateDouble;  // Pointer to function.
+  std::function<double(double)> square =              // Lambda with callable type.
+      [](double x) { return x * x; };
+  std::cout << "TruncateDouble(pi)=" << function_pointer(pi)
+            << ", square(3)=" << square(3.0) << "\n\n";
 
-  // the next thing you can do is derive classes. we have in the header file a
-  // sample class that holds two values and can perform an operation on them.
-  // class derivation allows us to use the same "base class"
+  // REFERENCES AND POINTERS
 
-  operation op= operation();
-  summer smr= summer();
-  multiplier mlt= multiplier();
+  int value = 5;            // Regular integer value.
+  int& alias = value;       // Reference is another name for same object.
+  int* address = &value;    // Pointer stores object address.
+  alias += 1;               // Mutating alias mutates value.
+  *address += 1;            // Dereferencing pointer mutates value.
+  std::cout << "value after ref+ptr updates=" << value << "\n\n";
 
-  printf("summer gives: %f\nmultiplier gives: %f\n\n",
-      smr.getSum(), mlt.getProd());
+  // CLASSES AND OBJECTS
 
-  // typedefs are aliases that can be used anywhere in place of type names,
-  // which can frequently get annoyingly complex; they're also useful when the
-  // type of something is passed as an input enum, for example. we create a
-  // typedef for an unsigned int here:
-  typedef unsigned int unsgn;
+  AClass cls;               // Instantiate object.
+  cls.SetX(4);              // Set internal integer.
+  cls.SetZAsProduct(5.2);   // Compute z = c*x.
+  std::cout << "AClass z=" << cls.GetZ() << "\n";
 
-  // now we can create an unsigned int this way:
-  unsgn xTD= 5;
+  AClass cls2;              // Separate instance has separate state.
+  cls2.SetX(8);
+  cls2.SetZAsProduct(1.703333);
+  std::cout << "AClass z1=" << cls.GetZ() << ", z2=" << cls2.GetZ() << "\n\n";
 
-  printf("%d\n\n", xTD);
+  Summer summer;            // Derived class from Operation.
+  Multiplier multiplier;    // Another derived class from Operation.
+  std::cout << "summer sum=" << summer.GetSum()
+            << ", multiplier product=" << multiplier.GetProduct() << "\n\n";
 
-  // function pointers are particularly useful too.
-  // let's make a function in the header file
+  // TYPE ALIASES AND ENUMS
 
-  // we create a typedef for integer-returning function pointers with
-  // one parameter of type character with:
-  typedef int (* funcptr)(double);
+  using UnsignedInt = unsigned int;  // using creates readable type alias.
+  UnsignedInt alias_value = 5;
 
-  // now we create a function pointer!!!
-  funcptr fpt= function;      // note that CPP compilers will implicitly convert
-                              // function names to function pointers!
+  enum class Mode { kRead, kWrite };  // enum class creates scoped constants.
+  Mode mode = Mode::kRead;
+  std::cout << "alias_value=" << alias_value
+            << ", mode_is_read=" << (mode == Mode::kRead) << "\n\n";
 
-  // now call function via the pointer!
-  double pi= 3.1415926535;
-  printf("%f is approximated by %d.\n\n", pi, (*fpt)(pi));
+  // TEMPLATES
 
-  // last but not least, we can use class templates to build generic classes. in
-  // the header file, we make a template to find y= m*x + b, regardless of the
-  // type that is used for x, y, m, and b.
-  line<double> pointslopedouble= line<double>(2*pi, 1.0);
-  line<int> pointslopeinteger= line<int>(2*pi, 1.0);
+  Line<double> line_double(2.0 * pi, 1.0);  // Generic class with double.
+  Line<int> line_int(2, 1);                  // Same template with int.
+  std::cout << "Line<double>(1.0)=" << line_double.Compute(1.0)
+            << ", Line<int>(1)=" << line_int.Compute(1) << "\n\n";
 
-  printf("(x, y)= (%f, %f)\n", 1.0, pointslopedouble.compute(1.0));
-  printf("(x, y)= (%d, %d)\n", 1, pointslopeinteger.compute(1.0));
+  // EXCEPTIONS
 
-  // every function has to return something unless it is a void function
-  // this function returns an integer and standard practice for a main is to
-  // return zero if everything went to plan
-  return 0;
+  try {  // try block captures exceptions from risky code.
+    throw std::runtime_error("Example exception");
+  } catch (const std::exception& ex) {  // catch handles base exception types.
+    std::cout << "Caught exception: " << ex.what() << "\n";
+  }
 
+  return 0;  // Returning 0 indicates successful program completion.
 }
